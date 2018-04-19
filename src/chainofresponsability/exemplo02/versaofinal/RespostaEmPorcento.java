@@ -1,0 +1,39 @@
+package chainofresponsability.exemplo02.versaofinal;
+
+import model.Conta;
+import model.Formato;
+import model.Requisicao;
+
+public class RespostaEmPorcento implements Resposta{
+
+    private Resposta outraResposta;
+    
+    public RespostaEmPorcento() { 
+        this.outraResposta = null;
+    }
+    
+    public RespostaEmPorcento(Resposta outraResposta){
+        this.outraResposta = outraResposta;
+    }
+    
+    @Override
+    public void responde(Requisicao req, Conta conta) {
+        if (req.getFormato() == Formato.PORCENTO) {
+            System.out.println(conta.getTitular() + '%' + conta.getSaldo());
+        } else if (outraResposta != null) {
+            outraResposta.responde(req, conta);
+        } else {
+            // não existe próxima na corrente, e ninguém atendeu a requisição!
+            // poderíamos não ter feito nada aqui, caso não fosse necessário!
+            throw new RuntimeException("Formato de resposta não encontrado");
+        }
+        
+    }
+
+    @Override
+    public void setProxima(Resposta resposta) {
+        // TODO Auto-generated method stub
+        
+    }
+
+}
